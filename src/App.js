@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useEffect, useState } from "react";
+import Deck from "./Cards";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const [pokemonCards, setPokemonCards] = useState(null);
+
+  useEffect(() => {
+    const getPokemon = async () => {
+      fetch("https://api.pokemontcg.io/v2/cards/", {
+        headers: { "X-Api-Key": "02068e61-1a57-4a69-819b-f8bdc5bd982a " },
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => setPokemonCards(data));
+    };
+    getPokemon();
+  }, []);
+
+  return <>{pokemonCards && <Deck pokemonCards={pokemonCards} />}</>;
 }
 
 export default App;
